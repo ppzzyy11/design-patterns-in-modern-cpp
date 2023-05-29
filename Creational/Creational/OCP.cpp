@@ -1,4 +1,4 @@
-// open closed principle
+// open closed principle: when you want to develop some new features, you should not modify the old code
 
 // open for extension, closed for modification
 
@@ -63,7 +63,8 @@ template <typename T> struct Specification
 };
 
 // new: 
-template <typename T> AndSpecification<T> operator&&
+template <typename T> 
+AndSpecification<T> operator&&
   (Specification<T>&& first, Specification<T>&& second)
 {
   return { first, second };
@@ -154,6 +155,5 @@ int main()
   for (auto& x : bf.filter(all, spec))
     cout << x->name << " is green and large\n";
 
-  getchar();
   return 0;
 }

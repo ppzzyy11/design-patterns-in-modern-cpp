@@ -1,3 +1,4 @@
+//boost::optinal is a library solution for Maybe Monad; below is a implementation.
 #include <iostream>
 #include <memory>
 #include <string>
@@ -6,7 +7,7 @@
 #include <boost/optional.hpp>
 
 using namespace std;
-
+//嵌套的optional 成员
 struct Address {
   string* house_name = nullptr;
 };
@@ -27,6 +28,7 @@ struct Maybe {
 
   Maybe(T *context) : context(context) { }
 
+  //都要处理 nullptr和非nullptr两种场景，并且可能返回nullptr
   template <typename TFunc>
   auto With(TFunc evaluator)
   {
@@ -56,7 +58,7 @@ void print_house_name(Person* p)
 
 
 
-int main_57576()
+int main()
 {
   Person p;
   p.address = new Address;
@@ -66,6 +68,9 @@ int main_57576()
   delete p.address->house_name;
   delete p.address;
 
-  getchar();
+    auto null0 = maybe((int*)nullptr);
+    null0.Do([](auto x) {cout<<x;});
+    auto ret = null0.With([](auto x) {return x;});
+
   return 0;
 }

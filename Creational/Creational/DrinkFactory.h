@@ -28,22 +28,22 @@ public:
 
 class DrinkWithVolumeFactory
 {
-  map<string, function<unique_ptr<HotDrink>()>> factories;
+  map<string, function<unique_ptr<HotDrink>(int)>> factories;//function method
 public:
 
   DrinkWithVolumeFactory()
   {
-    factories["tea"] = [] {
+    factories["tea"] = [](int volume) {
       auto tea = make_unique<Tea>();
-      tea->prepare(200);
+      tea->prepare(volume);
       return tea;
     };
   }
 
-  unique_ptr<HotDrink> make_drink(const string& name);
+  unique_ptr<HotDrink> make_drink(const string& name, int volume);
 };
 
-inline unique_ptr<HotDrink> DrinkWithVolumeFactory::make_drink(const string& name)
+inline unique_ptr<HotDrink> DrinkWithVolumeFactory::make_drink(const string& name, int volume = 200)
 {
-  return factories[name]();
+  return factories[name](volume);
 }

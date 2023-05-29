@@ -1,3 +1,4 @@
+// ISP(Interface Segregation Principle), IMachine is an example to illustrate the problem. While IPrinter and IScanner are good.
 #include <vector>
 struct Document;
 
@@ -15,7 +16,7 @@ struct Document;
 //  void scan(Document& doc) override;
 //};
 
-// 1. Recompile
+// 1. Recompile. Not single resposibility
 // 2. Client does not need this
 // 3. Forcing implementors to implement too much
 

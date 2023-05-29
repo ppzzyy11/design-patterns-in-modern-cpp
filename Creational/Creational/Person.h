@@ -19,7 +19,7 @@ class Person
   }
   
 public:
-  ~Person()
+  ~Person()//private destructor can not be declared as Person
   {
     std::cout << "Person destroyed\n";
   }

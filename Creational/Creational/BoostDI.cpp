@@ -58,12 +58,14 @@ struct Car
   }
 };
 
-int main123()
+int main()
 {
   // manual
   auto logger = make_shared<ConsoleLogger>();
   auto c = make_shared<Car>(make_unique<Engine>(),logger);
+  std::cout << *c << std::endl;
 
+  //这下面是啥？Process finished with exit code 134 (interrupted by signal 6: SIGABRT)
   using namespace boost;
   auto injector = di::make_injector(
     di::bind<ILogger>().to<ConsoleLogger>()
@@ -72,6 +74,5 @@ int main123()
 
   std::cout << *car << std::endl;
 
-  getchar();
   return 0;
 }

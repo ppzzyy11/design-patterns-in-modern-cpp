@@ -51,7 +51,7 @@ public:
   }
 };
 
-int main_z()
+int main()
 {
   // will not work
   //Point p{ 1,2 };

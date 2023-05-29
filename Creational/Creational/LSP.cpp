@@ -1,3 +1,4 @@
+//This is an example breaking Liskov Substitution Principle(LSP), the square can not replace its parent perfectly in the function process.
 // Objects in a program should be replaceable with instances of their subtypes
 // w/o altering the correctness of the program
 
@@ -34,25 +35,45 @@ public:
 struct RectangleFactory
 {
   static Rectangle create_rectangle(int w, int h);
-  static Rectangle create_square(int size);
+  static Square create_square(int size);
 };
+
+Rectangle RectangleFactory::create_rectangle(
+        int w,
+        int h)
+{
+    return Rectangle(w, h);
+}
+
+Square RectangleFactory::create_square(
+        int size)
+{
+    return Square(size);
+}
 
 void process(Rectangle& r)
 {
   int w = r.get_width();
+  std::cout<<"area: "<<r.area()<<"\t";
   r.set_height(10);
 
   std::cout << "expected area = " << (w * 10) 
     << ", got " << r.area() << std::endl;
 }
 
-int main342342()
+int main()
 {
-  Rectangle r{ 3, 4 };
+  Rectangle r{ 3, 3 };
   process(r);
+  
+  Rectangle r2 = RectangleFactory::create_rectangle(1, 2);
+  process(r2);
 
   Square sq{ 5 };
   process(sq);
+  
+  Square sq2 = RectangleFactory::create_square(3);
+  process(sq2);
 
   getchar();
   return 0;

@@ -25,7 +25,7 @@ class Point
   // use a factory method
   Point(float x, float y) : x(x), y(y) {}
 
-  class PointFactory
+  class PointFactory//private
   {
     PointFactory() {}
   public:
@@ -43,7 +43,7 @@ public:
   static PointFactory Factory;
 };
 
-int main_2()
+int main()
 {
   // will not work
   // Point p{ 1,2 };
@@ -55,7 +55,7 @@ int main_2()
   //auto p = Point::PointFactory::NewCartesian(3, 4);
 
   // at any rate, use this
-  auto pp = Point::Factory.NewCartesian(2, 3);
+  auto pp = Point::Factory.NewCartesian(2, 3);//public member calls a private class's public function.
 
   return 0;
 }

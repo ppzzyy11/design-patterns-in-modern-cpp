@@ -47,6 +47,7 @@ struct Contact
       << " address: " << *obj.address;
   }
 
+
 private:
   friend class boost::serialization::access;
 
@@ -57,13 +58,13 @@ private:
   }
 };
 
-int main_()
+int main()
 {
   Contact john;
   john.name = "John Doe";
   john.address = new Address{ "123 East Dr", "London", 123 };
 
-  auto clone = [](const Contact& c)
+  auto clone = [](const Contact& c)//serialization and deserialization
   {
     ostringstream oss;
     boost::archive::text_oarchive oa(oss);
@@ -84,6 +85,5 @@ int main_()
 
   cout << john << endl << jane << endl;
 
-  getchar();
   return 0;
 }

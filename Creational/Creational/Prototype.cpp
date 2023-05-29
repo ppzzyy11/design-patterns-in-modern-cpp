@@ -1,3 +1,9 @@
+/*
+ * prototype的copy部分可以用
+ * 1. 序列化和反序列化
+ * 2. deep copy
+ * 来做，这个文件列了一些错误写法
+*/
 #include <string>
 #include <iostream>
 #include <memory>
@@ -11,102 +17,51 @@ using namespace std;
 
 struct Address
 {
-  string street;
-  string city;
-  int suite;
+    string street;
+    string city;
+    int suite;
 
 
-  Address(const string& street, const string& city, const int suite)
-    : street{street},
-      city{city},
-      suite{suite}
-  {
-  }
+    friend ostream& operator<<(ostream& os, const Address& obj)
+    {
+        return os
+                << "street: " << obj.street
+                << " city: " << obj.city
+                << " suite: " << obj.suite;
+    }
 
-  /*Address(const Address& other)
-    : street{other.street},
-      city{other.city},
-      suite{other.suite}
-  {
-  }*/
+private:
+    friend class boost::serialization::access;
 
-  friend ostream& operator<<(ostream& os, const Address& obj)
-  {
-    return os
-      << "street: " << obj.street
-      << " city: " << obj.city
-      << " suite: " << obj.suite;
-  }
+    template<class Ar> void serialize(Ar& ar, const unsigned int version)
+    {
+        ar & street;
+        ar & city;
+        ar & suite;
+    }
 };
-
 
 struct Contact
 {
-  string name;
-  Address* address;
+    string name;
+    Address* address = nullptr;
 
-  Contact& operator=(const Contact& other)
-  {
-    if (this == &other)
-      return *this;
-    name = other.name;
-    address = other.address;
-    return *this;
-  }
-
-  Contact() : name(nullptr), address(nullptr)
-  {} // required for serialization
-
-  Contact(string name, Address* address)
-    : name{name}, address{address}
-  {
-    //this->address = new Address{ *address };
-  }
-
-  Contact(const Contact& other)
-    : name{other.name}
-    //, address{ new Address{*other.address} }
-  {
-    address = new Address(
-      other.address->street, 
-      other.address->city, 
-      other.address->suite
-    );
-  }
+    friend ostream& operator<<(ostream& os, const Contact& obj)
+    {
+        return os
+                << "name: " << obj.name
+                << " address: " << *obj.address;
+    }
 
 
 private:
-  friend class boost::serialization::access;
+    friend class boost::serialization::access;
 
-  template <class archive>
-  void save(archive& ar, const unsigned version) const
-  {
-    ar << name;
-    ar << address;
-  }
-
-  template <class archive>
-  void load(archive& ar, const unsigned version)
-  {
-    ar >> name;
-    ar >> address;
-  }
-
-  BOOST_SERIALIZATION_SPLIT_MEMBER()
-
-public:
-  ~Contact()
-  {
-    delete address;
-  }
-
-
-  friend ostream& operator<<(ostream& os, const Contact& obj)
-  {
-    return os
-      << "name: " << obj.name
-      << " works at " << *obj.address; // note the star here
-  }
+    template<class Ar> void serialize(Ar& ar, const unsigned int version)
+    {
+        ar & name;
+        ar & address; // no *
+    }
 };
 
 struct EmployeeFactory
@@ -138,7 +93,7 @@ private:
 //Contact EmployeeFactory::main{ "", new Address{ "123 East Dr", "London", 0 } };
 //Contact EmployeeFactory::aux{ "", new Address{ "123B East Dr", "London", 0 } };
 
-int main_3423()
+int main()
 {
   // this is tedious
   // Contact john{ "John Doe", new Address{"123 East Dr", "London"} };
@@ -202,13 +157,17 @@ int main_3423()
     return result;
   };
   
-  // contact john = ...
-  // contact jane = clone(john)
+ Contact john{ "John Doe", addr };
+  john.address->suite = 123;
+  Contact jane = clone(john);
+  jane.name = "Jane Doe";
+  jane.address->street = "123B West Dr";
+  jane.address->suite = 300;
 
   //auto john = EmployeeFactory::NewAuxOfficeEmployee("John Doe", 123);
   //auto jane = EmployeeFactory::NewMainOfficeEmployee("Jane Doe", 125);
 
-  //cout << *john << "\n" << *jane << "\n"; // note the stars here
+  cout << john << "\n" << jane << "\n"; // note the stars here
 
   delete addr;
 

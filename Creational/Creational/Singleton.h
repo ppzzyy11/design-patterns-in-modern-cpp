@@ -1,4 +1,4 @@
-#pragma once
+#pragma once//同一个文件只会被包含一次，（#ifndef则关注内容）
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -50,7 +50,7 @@ public:
   }
 
   /*
-  static SingletonDatabase* get_instance()
+  static SingletonDatabase* get_instance()//非静态
   {
     if (!instance)
       instance = new SingletonDatabase;

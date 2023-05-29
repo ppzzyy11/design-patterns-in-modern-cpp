@@ -13,7 +13,7 @@ struct Person
 
 class PersonFactory
 {
-  int id{ 0 };
+  int id{ 0 };//unique number, need not to be static
 public:
   Person create_person(const string& name)
   {
@@ -50,6 +50,6 @@ namespace
 
 int main(int ac, char* av[])
 {
-  testing::InitGoogleTest(&ac, av);
+  testing::InitGoogleTest(&ac, av);//anohter way to call gtest
   return RUN_ALL_TESTS();
 }
